@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Flexoryn SeverX</title>
+  <style>
+    :root {
+      --accent: #e8272a;
+      --accent-hover: #c41e1e;
+      --bg: #f4f5f7;
+      --card: #ffffff;
+      --border: #e0e0e0;
+      --text: #1a1a1a;
+      --muted: #666;
+      --success: #2e7d32;
+      --success-bg: #e8f5e9;
+      --error: #c62828;
+      --error-bg: #ffebee;
+      --sidebar-w: 200px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    }
+    .login-card {
+      background: var(--card); border-radius: 16px; padding: 48px 40px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.12); width: 100%; max-width: 380px; text-align: center;
+    }
+    .login-logo { font-size: 28px; font-weight: 900; margin-bottom: 6px; }
+    .login-logo span { color: var(--accent); }
+    .login-sub { color: var(--muted); font-size: 13px; margin-bottom: 32px; }
+    .login-input {
+      width: 100%; padding: 12px 16px; border: 1.5px solid var(--border);
+      border-radius: 8px; font-size: 15px; margin-bottom: 14px; outline: none;
+      transition: border-color .2s;
+    }
+    .login-input:focus { border-color: var(--accent); }
+    .login-btn {
+      width: 100%; padding: 13px; background: var(--accent); color: #fff;
+      border: none; border-radius: 8px; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: background .2s;
+    }
+    .login-btn:hover { background: var(--accent-hover); }
+    .login-error { color: var(--error); font-size: 13px; margin-top: 10px; }
+
+    /* ── ADMIN LAYOUT ── */
+    #admin-screen { display: none; min-height: 100vh; }
+
+    .admin-topbar {
+      background: #1a1a1a; color: #fff; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 52px; position: sticky; top: 0; z-index: 50;
+    }
+    .admin-topbar-title { font-weight: 800; font-size: 16px; letter-spacing: -.3px; }
+    .admin-topbar-title span { color: var(--accent); }
+    .topbar-right { display: flex; gap: 12px; align-items: center; }
+    .btn-save {
+      background: var(--accent); color: #fff; border: none; padding: 8px 20px;
+      border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;
+      transition: background .2s; display: flex; align-items: center; gap: 6px;
+    }
+    .btn-save:hover { background: var(--accent-hover); }
+    .btn-save:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-logout {
+      background: none; border: 1px solid rgba(255,255,255,.3); color: rgba(255,255,255,.7);
+      padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer;
+    }
+
+    .admin-body { display: flex; min-height: calc(100vh - 52px); }
+
+    /* SIDEBAR */
+    .admin-sidebar {
+      width: var(--sidebar-w); background: var(--card); border-right: 1px solid var(--border);
+      padding: 20px 0; flex-shrink: 0; position: sticky; top: 52px; height: calc(100vh - 52px);
+      overflow-y: auto;
+    }
+    .sidebar-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted);
+      padding: 0 16px 8px; text-transform: uppercase;
+    }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+      color: var(--text); text-decoration: none; font-size: 13px; font-weight: 500;
+      cursor: pointer; border-left: 3px solid transparent; transition: all .15s;
+    }
+    .sidebar-link:hover { background: var(--bg); }
+    .sidebar-link.active { border-left-color: var(--accent); background: #fff5f5; color: var(--accent); font-weight: 700; }
+    .sidebar-icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-sep { border: none; border-top: 1px solid var(--border); margin: 8px 16px; }
+
+    /* MAIN */
+    .admin-main { flex: 1; padding: 28px 32px; overflow-y: auto; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* CARDS */
+    .card {
+      background: var(--card); border-radius: 12px; border: 1px solid var(--border);
+      padding: 24px; margin-bottom: 20px;
+    }
+    .card-title { font-size: 15px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+
+    /* FORM FIELDS */
+    .field-group { margin-bottom: 18px; }
+    .field-label { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: .5px; }
+    .field-input, .field-textarea, .field-select {
+      width: 100%; padding: 10px 12px; border: 1.5px solid var(--border);
+      border-radius: 8px; font-size: 14px; color: var(--text); outline: none;
+      transition: border-color .2s; font-family: inherit;
+    }
+    .field-input:focus, .field-textarea:focus { border-color: var(--accent); }
+    .field-textarea { resize: vertical; min-height: 80px; }
+    .field-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    /* COLOR ROW */
+    .color-row {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px;
+    }
+    .color-item { background: var(--bg); border-radius: 8px; padding: 12px; }
+    .color-item-label { font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+    .color-pickers { display: flex; gap: 8px; align-items: center; }
+    .color-swatch { width: 36px; height: 36px; border-radius: 6px; border: 2px solid var(--border); cursor: pointer; padding: 0; background: none; overflow: hidden; }
+    .color-swatch input[type="color"] { width: 200%; height: 200%; margin: -50%; border: none; cursor: pointer; }
+    .color-hex { flex: 1; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 12px; font-family: monospace; outline: none; }
+    .color-hex:focus { border-color: var(--accent); }
+
+    /* IMAGE ROW */
+    .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+    .image-item { background: var(--bg); border-radius: 10px; padding: 14px; }
+    .image-item-label { font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--muted); text-transform: uppercase; }
+    .image-preview {
+      width: 100%; height: 120px; border-radius: 8px; background: #eee;
+      object-fit: cover; display: none; margin-bottom: 8px;
+    }
+    .image-preview.visible { display: block; }
+    .image-placeholder {
+      width: 100%; height: 120px; border-radius: 8px; background: linear-gradient(135deg,#f0f0f0,#e0e0e0);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 8px; color: #bbb;
+    }
+    .image-placeholder.hidden { display: none; }
+
+    /* DASHBOARD KPI */
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: var(--card); border-radius: 12px; border: 1px solid var(--border); padding: 20px 18px; text-align: center; }
+    .kpi-value { font-size: 32px; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+    .kpi-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+
+    /* DATE FILTER */
+    .date-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; align-items: center; }
+    .date-btn {
+      padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--card); font-size: 13px; font-weight: 600; cursor: pointer;
+      color: var(--muted); transition: all .15s;
+    }
+    .date-btn.active, .date-btn:hover { border-color: var(--accent); color: var(--accent); background: #fff5f5; }
+    .date-range-inputs { display: none; gap: 8px; align-items: center; }
+    .date-range-inputs.visible { display: flex; }
+    .date-range-inputs input[type="date"] {
+      padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: 13px; color: var(--text); outline: none;
+    }
+    .date-range-inputs button {
+      padding: 7px 14px; background: var(--accent); color: #fff; border: none;
+      border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+
+    /* FUNNEL VIZ */
+    .funnel-viz { margin-bottom: 24px; }
+    .funnel-level { margin-bottom: 10px; }
+    .funnel-level-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--muted); }
+    .funnel-bar-track { background: #f0f0f0; border-radius: 4px; height: 28px; overflow: hidden; }
+    .funnel-bar-fill { height: 100%; border-radius: 4px; transition: width .5s; display: flex; align-items: center; padding-left: 10px; color: #fff; font-size: 11px; font-weight: 700; }
+
+    /* HOURLY CHART */
+    .hourly-chart { background: var(--bg); border-radius: 10px; padding: 16px; }
+    .hourly-bars { display: flex; align-items: flex-end; gap: 3px; height: 80px; }
+    .hourly-bar { flex: 1; background: var(--accent); border-radius: 3px 3px 0 0; min-height: 2px; opacity: .8; transition: height .3s; position: relative; }
+    .hourly-bar:hover { opacity: 1; }
+    .hourly-labels { display: flex; gap: 3px; margin-top: 4px; }
+    .hourly-label { flex: 1; text-align: center; font-size: 9px; color: var(--muted); }
+
+    /* TOGGLE CARDS */
+    .items-toolbar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px; font-size:13px; font-weight:600; color:#555; }
+    .items-bulk { display: flex; gap: 8px; }
+    .items-bulk button { padding:7px 14px; background:#fff; border:1.5px solid var(--border); border-radius:8px; font-size:12px; font-weight:600; color:#666; cursor:pointer; }
+    .items-bulk button:hover { border-color: var(--accent); color: var(--accent); }
+    .item-card { background:#fff; border-radius:12px; padding:14px 18px; margin-bottom:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); display:flex; align-items:center; gap:14px; transition:opacity .2s; border: 1px solid var(--border); }
+    .item-card.disabled { opacity:0.45; }
+    .item-num { width:32px; height:32px; border-radius:50%; background:var(--accent); color:#fff; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .item-info { flex:1; min-width:0; }
+    .item-title-preview { font-size:13px; font-weight:600; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .toggle-wrap { display:flex; flex-direction:column; align-items:center; gap:3px; flex-shrink:0; }
+    .toggle-label { font-size:10px; font-weight:700; color:#999; letter-spacing:.4px; }
+    .toggle { position:relative; display:inline-block; width:42px; height:24px; }
+    .toggle input { opacity:0; width:0; height:0; }
+    .toggle-slider { position:absolute; cursor:pointer; inset:0; background:#e0e0e0; border-radius:24px; transition:.2s; }
+    .toggle-slider:before { content:''; position:absolute; width:18px; height:18px; border-radius:50%; left:3px; top:3px; background:#fff; transition:.2s; }
+    .toggle input:checked + .toggle-slider { background:var(--accent); }
+    .toggle input:checked + .toggle-slider:before { transform:translateX(18px); }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; padding: 14px 20px;
+      border-radius: 10px; font-size: 13px; font-weight: 600; z-index: 999;
+      transform: translateY(100px); opacity: 0; transition: all .3s;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--success-bg); color: var(--success); border: 1px solid #a5d6a7; }
+    .toast.error { background: var(--error-bg); color: var(--error); border: 1px solid #ef9a9a; }
+
+    /* SPINNER */
+    .spinner {
+      width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 700px) {
+      .admin-sidebar { display: none; }
+      .admin-main { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Flexo<span>ryn</span></div>
+    <div class="login-sub">Panneau d'administration SeverX</div>
+    <input class="login-input" type="password" id="login-pw" placeholder="Mot de passe admin" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Se connecter</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ADMIN SCREEN -->
+<div id="admin-screen">
+  <div class="admin-topbar">
+    <div class="admin-topbar-title">Flexo<span>ryn</span> Admin</div>
+    <div class="topbar-right">
+      <button class="btn-save" id="save-btn" onclick="saveConfig()">
+        <div class="spinner" id="save-spinner"></div>
+        <span id="save-label">💾 Enregistrer</span>
+      </button>
+      <button class="btn-logout" onclick="doLogout()">Déconnexion</button>
+    </div>
+  </div>
+  <div class="admin-body">
+    <!-- SIDEBAR -->
+    <nav class="admin-sidebar">
+      <div class="sidebar-label">Analytics</div>
+      <div class="sidebar-link active" onclick="showTab('dashboard')" id="tab-nav-dashboard">
+        <span class="sidebar-icon">📊</span> Dashboard
+      </div>
+      <hr class="sidebar-sep">
+      <div class="sidebar-label">Contenu</div>
+      <div class="sidebar-link" onclick="showTab('textes')" id="tab-nav-textes">
+        <span class="sidebar-icon">✏️</span> Textes
+      </div>
+      <div class="sidebar-link" onclick="showTab('images')" id="tab-nav-images">
+        <span class="sidebar-icon">🖼️</span> Images
+      </div>
+      <div class="sidebar-link" onclick="showTab('couleurs')" id="tab-nav-couleurs">
+        <span class="sidebar-icon">🎨</span> Couleurs
+      </div>
+      <div class="sidebar-link" onclick="showTab('typo')" id="tab-nav-typo">
+        <span class="sidebar-icon">🔤</span> Typographie
+      </div>
+      <div class="sidebar-link" onclick="showTab('items')" id="tab-nav-items">
+        <span class="sidebar-icon">⚙️</span> Sections actives
+      </div>
+      <hr class="sidebar-sep">
+      <div class="sidebar-label">Paramètres</div>
+      <div class="sidebar-link" onclick="showTab('cta')" id="tab-nav-cta">
+        <span class="sidebar-icon">🔗</span> Lien CTA
+      </div>
+      <div class="sidebar-link" onclick="showTab('tracking')" id="tab-nav-tracking">
+        <span class="sidebar-icon">📡</span> Tracking
+      </div>
+      <div class="sidebar-link" onclick="showTab('reglages')" id="tab-nav-reglages">
+        <span class="sidebar-icon">🔧</span> Réglages
+      </div>
+    </nav>
+
+    <!-- MAIN PANELS -->
+    <main class="admin-main">
+
+      <!-- DASHBOARD -->
+      <div class="tab-panel active" id="tab-dashboard">
+        <h2 style="margin-bottom:20px;font-size:20px;">📊 Dashboard</h2>
+
+        <div class="date-filter">
+          <button class="date-btn active" onclick="setDateFilter('today',this)">Aujourd'hui</button>
+          <button class="date-btn" onclick="setDateFilter('7d',this)">7 jours</button>
+          <button class="date-btn" onclick="setDateFilter('30d',this)">30 jours</button>
+          <button class="date-btn" onclick="setDateFilter('custom',this)">Période</button>
+          <div class="date-range-inputs" id="date-range-inputs">
+            <input type="date" id="date-from">
+            <span>→</span>
+            <input type="date" id="date-to">
+            <button onclick="loadDashboard()">Appliquer</button>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-value" id="kpi-visitors">—</div><div class="kpi-label">Visiteurs</div></div>
+          <div class="kpi-card"><div class="kpi-value" id="kpi-conv">—</div><div class="kpi-label">Taux conv.</div></div>
+          <div class="kpi-card"><div class="kpi-value" id="kpi-scroll">—</div><div class="kpi-label">Scroll moy.</div></div>
+          <div class="kpi-card"><div class="kpi-value" id="kpi-cta">—</div><div class="kpi-label">Clics CTA</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🎯 Entonnoir de conversion</div>
+          <div class="funnel-viz" id="funnel-viz">
+            <div style="color:var(--muted);font-size:13px;">Chargement...</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">⏰ Visiteurs par heure</div>
+          <div class="hourly-chart">
+            <div class="hourly-bars" id="hourly-bars">
+              <div style="color:var(--muted);font-size:13px;">Chargement...</div>
+            </div>
+            <div class="hourly-labels" id="hourly-labels"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEXTES -->
+      <div class="tab-panel" id="tab-textes">
+        <h2 style="margin-bottom:20px;font-size:20px;">✏️ Textes</h2>
+        <div id="textes-container"></div>
+      </div>
+
+      <!-- IMAGES -->
+      <div class="tab-panel" id="tab-images">
+        <h2 style="margin-bottom:20px;font-size:20px;">🖼️ Images</h2>
+        <div class="image-grid" id="images-container"></div>
+      </div>
+
+      <!-- COULEURS -->
+      <div class="tab-panel" id="tab-couleurs">
+        <h2 style="margin-bottom:20px;font-size:20px;">🎨 Couleurs</h2>
+        <div class="card">
+          <div class="color-row" id="colors-container"></div>
+        </div>
+      </div>
+
+      <!-- TYPO -->
+      <div class="tab-panel" id="tab-typo">
+        <h2 style="margin-bottom:20px;font-size:20px;">🔤 Typographie</h2>
+        <div class="card">
+          <div class="field-group">
+            <label class="field-label">Police titres (Google Fonts)</label>
+            <input class="field-input" type="text" id="cfg-font-headline" placeholder="ex: Merriweather">
+            <div class="field-hint">Nom exact de la police Google Fonts pour les titres H1/H2</div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Police corps (Google Fonts)</label>
+            <input class="field-input" type="text" id="cfg-font-body" placeholder="ex: Lato">
+            <div class="field-hint">Nom exact de la police Google Fonts pour le corps du texte</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEMS ACTIFS -->
+      <div class="tab-panel" id="tab-items">
+        <h2 style="margin-bottom:20px;font-size:20px;">⚙️ Sections actives</h2>
+        <div class="card">
+          <div class="items-toolbar">
+            <span id="items-count-label">— sections activées</span>
+            <div class="items-bulk">
+              <button onclick="bulkItems(true)">✅ Tout activer</button>
+              <button onclick="bulkItems(false)">❌ Tout désactiver</button>
+            </div>
+          </div>
+          <div id="items-cards"></div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="tab-panel" id="tab-cta">
+        <h2 style="margin-bottom:20px;font-size:20px;">🔗 Lien CTA</h2>
+        <div class="card">
+          <div class="field-group">
+            <label class="field-label">URL destination (tous les boutons)</label>
+            <input class="field-input" type="url" id="cfg-ctaUrl" placeholder="https://flexoryn.com/products/severx">
+          </div>
+        </div>
+      </div>
+
+      <!-- TRACKING -->
+      <div class="tab-panel" id="tab-tracking">
+        <h2 style="margin-bottom:20px;font-size:20px;">📡 Tracking</h2>
+        <div class="card">
+          <div class="field-group">
+            <label class="field-label">Meta Pixel ID</label>
+            <input class="field-input" type="text" id="cfg-metaPixelId" placeholder="123456789012345">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Google Analytics ID</label>
+            <input class="field-input" type="text" id="cfg-gaId" placeholder="G-XXXXXXXXXX">
+          </div>
+        </div>
+      </div>
+
+      <!-- RÉGLAGES -->
+      <div class="tab-panel" id="tab-reglages">
+        <h2 style="margin-bottom:20px;font-size:20px;">🔧 Réglages</h2>
+        <div class="card">
+          <div class="field-group">
+            <label class="field-label">Supabase URL</label>
+            <input class="field-input" type="url" id="cfg-supabaseUrl" placeholder="https://xxx.supabase.co">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Supabase Anon Key</label>
+            <input class="field-input" type="text" id="cfg-supabaseAnonKey" placeholder="eyJhbGci...">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Mot de passe admin</label>
+            <input class="field-input" type="password" id="cfg-adminPassword" placeholder="Nouveau mot de passe">
+            <div class="field-hint">Laissez vide pour ne pas changer</div>
+          </div>
+        </div>
+        <div class="card" style="background:#fff8e1;border-color:#fdd835;">
+          <div class="card-title">📋 Schéma SQL Supabase</div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Exécutez ce script dans Supabase > SQL Editor :</p>
+          <pre style="background:#1a1a1a;color:#f8f8f2;padding:16px;border-radius:8px;font-size:12px;overflow-x:auto;line-height:1.6;">
+CREATE TABLE IF NOT EXISTS funnel_config (
+  id BIGSERIAL PRIMARY KEY,
+  funnel_id TEXT UNIQUE NOT NULL,
+  config JSONB NOT NULL DEFAULT '{}',
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS funnel_events (
+  id BIGSERIAL PRIMARY KEY,
+  funnel_id TEXT,
+  visitor_id TEXT,
+  event_type TEXT,
+  event_data JSONB DEFAULT '{}',
+  page_url TEXT,
+  user_agent TEXT,
+  referrer TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_events_funnel_created
+  ON funnel_events(funnel_id, created_at);
+
+ALTER TABLE funnel_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE funnel_config ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public insert events" ON funnel_events FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admin read events" ON funnel_events FOR SELECT USING (true);
+CREATE POLICY "Admin all config" ON funnel_config FOR ALL USING (true);</pre>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var CFG = window.FUNNEL_CONFIG || {};
+  var supabaseClient = null;
+  var currentDateFilter = 'today';
+
+  /* ── TEXT DEFINITIONS ── */
+  var TEXT_DEFS = [
+    {key:'sponsoredBar', label:'Barre sponsorisée', type:'text'},
+    {key:'siteName', label:'Nom du site', type:'text'},
+    {key:'siteTagline', label:'Tagline site', type:'text'},
+    {key:'h1', label:'Titre principal H1', type:'textarea'},
+    {key:'h1Sub', label:'Sous-titre hero', type:'textarea'},
+    {key:'byline', label:'Auteur / byline', type:'text'},
+    {key:'bylineDate', label:'Date article', type:'text'},
+    {key:'bullet1', label:'Bénéfice 1', type:'textarea'},
+    {key:'bullet2', label:'Bénéfice 2', type:'textarea'},
+    {key:'bullet3', label:'Bénéfice 3', type:'textarea'},
+    {key:'stockBadge', label:'Badge stock', type:'text'},
+    {key:'ctaHero', label:'CTA bouton hero', type:'text'},
+    {key:'badge1Title', label:'Badge confiance 1', type:'text'},
+    {key:'badge2Title', label:'Badge confiance 2', type:'text'},
+    {key:'badge3Title', label:'Badge confiance 3', type:'text'},
+    {key:'timerLabel', label:'Label timer', type:'text'},
+    {key:'introP1', label:'Intro — paragraphe 1', type:'textarea'},
+    {key:'introP2', label:'Intro — paragraphe 2 (présentation)', type:'textarea'},
+    {key:'introP3', label:'Intro — paragraphe 3', type:'text'},
+    {key:'introP4', label:'Intro — paragraphe 4 (moment clé)', type:'textarea'},
+    {key:'introP5', label:'Intro — paragraphe 5', type:'textarea'},
+    {key:'s1Title', label:'Section 1 — Titre', type:'text'},
+    {key:'s1P1', label:'Section 1 — Intro liste', type:'textarea'},
+    {key:'s1Li1', label:'Section 1 — Traitement 1', type:'text'},
+    {key:'s1Li2', label:'Section 1 — Traitement 2', type:'text'},
+    {key:'s1Li3', label:'Section 1 — Traitement 3', type:'text'},
+    {key:'s1Li4', label:'Section 1 — Traitement 4', type:'text'},
+    {key:'s1Li5', label:'Section 1 — Traitement 5', type:'text'},
+    {key:'s1Total', label:'Section 1 — Total dépensé', type:'text'},
+    {key:'s1P2', label:'Section 1 — Paragraphe 2', type:'textarea'},
+    {key:'s1P3', label:'Section 1 — Paragraphe 3 (impact)', type:'text'},
+    {key:'s2Title', label:'Section 2 — Titre', type:'text'},
+    {key:'s2P1', label:'Section 2 — Intro', type:'textarea'},
+    {key:'s2Quote1', label:'Section 2 — Citation 1 (post FB)', type:'textarea'},
+    {key:'s2P2', label:'Section 2 — Texte après citation', type:'text'},
+    {key:'s2Quote2', label:'Section 2 — Citation 2 (témoignage)', type:'textarea'},
+    {key:'s2Li1', label:'Section 2 — Insight 1', type:'text'},
+    {key:'s2Li2', label:'Section 2 — Insight 2', type:'text'},
+    {key:'s2Li3', label:'Section 2 — Insight 3', type:'text'},
+    {key:'s2Li4', label:'Section 2 — Insight 4', type:'text'},
+    {key:'s2P3', label:'Section 2 — Prix et décision', type:'textarea'},
+    {key:'s2P4', label:'Section 2 — Conclusion commande', type:'text'},
+    {key:'s3Title', label:'Section 3 — Titre (calendrier)', type:'text'},
+    {key:'s3W1Title', label:'Semaine 1 — Label', type:'text'},
+    {key:'s3W1', label:'Semaine 1 — Texte', type:'textarea'},
+    {key:'s3W2Title', label:'Semaine 2 — Label', type:'text'},
+    {key:'s3W2', label:'Semaine 2 — Texte', type:'textarea'},
+    {key:'s3W3Title', label:'Semaine 3 — Label', type:'text'},
+    {key:'s3W3', label:'Semaine 3 — Texte', type:'textarea'},
+    {key:'s3W4Title', label:'Semaine 4 — Label', type:'text'},
+    {key:'s3W4', label:'Semaine 4 — Texte', type:'textarea'},
+    {key:'s4Title', label:'Section 4 — Titre (science)', type:'text'},
+    {key:'s4P1', label:'Section 4 — Intro', type:'textarea'},
+    {key:'s4HowTitle', label:'Section 4 — Sous-titre "Comment fonctionne"', type:'text'},
+    {key:'s4Li1', label:'Section 4 — Point science 1', type:'textarea'},
+    {key:'s4Li2', label:'Section 4 — Point science 2', type:'textarea'},
+    {key:'s4Li3', label:'Section 4 — Point science 3', type:'textarea'},
+    {key:'s4Li4', label:'Section 4 — Point science 4', type:'textarea'},
+    {key:'s4P2', label:'Section 4 — Conclusion', type:'textarea'},
+    {key:'s5Title', label:'Section 5 — Titre (pourquoi les autres échouent)', type:'text'},
+    {key:'s5P1', label:'Section 5 — Talonnettes', type:'textarea'},
+    {key:'s5P2', label:'Section 5 — Semelles', type:'textarea'},
+    {key:'s5P3', label:'Section 5 — Repos', type:'textarea'},
+    {key:'s5P4', label:'Section 5 — Conclusion prix', type:'textarea'},
+    {key:'s6Title', label:'Section 6 — Titre (témoignages)', type:'text'},
+    {key:'s6P1', label:'Section 6 — Intro', type:'text'},
+    {key:'s6T1Text', label:'Témoignage 1 — Texte', type:'textarea'},
+    {key:'s6T1Author', label:'Témoignage 1 — Auteur', type:'text'},
+    {key:'s6T2Text', label:'Témoignage 2 — Texte', type:'textarea'},
+    {key:'s6T2Author', label:'Témoignage 2 — Auteur', type:'text'},
+    {key:'s6P2', label:'Section 6 — Conclusion', type:'text'},
+    {key:'s7Title', label:'Section 7 — Titre (coût de l\'attente)', type:'text'},
+    {key:'s7P1', label:'Section 7 — Intro', type:'textarea'},
+    {key:'s7Li1', label:'Section 7 — Perte 1', type:'text'},
+    {key:'s7Li2', label:'Section 7 — Perte 2', type:'text'},
+    {key:'s7Li3', label:'Section 7 — Perte 3', type:'text'},
+    {key:'s7Li4', label:'Section 7 — Perte 4', type:'text'},
+    {key:'s7Li5', label:'Section 7 — Perte 5', type:'text'},
+    {key:'s7P2', label:'Section 7 — Conclusion', type:'textarea'},
+    {key:'ctaMid', label:'CTA milieu — Label sécurisé', type:'text'},
+    {key:'ctaMidBtn', label:'CTA milieu — Texte bouton', type:'text'},
+    {key:'ctaConverge', label:'CTA milieu — Texte sous bouton', type:'textarea'},
+    {key:'s8Title', label:'Section 8 — Titre (comparaison)', type:'text'},
+    {key:'s8Li1', label:'Comparaison — Vs talonnettes', type:'textarea'},
+    {key:'s8Li2', label:'Comparaison — Vs semelles', type:'textarea'},
+    {key:'s8Li3', label:'Comparaison — Vs kiné', type:'textarea'},
+    {key:'s8Li4', label:'Comparaison — Vs repos', type:'textarea'},
+    {key:'s9Title', label:'Section 9 — Titre (garantie)', type:'text'},
+    {key:'s9P1', label:'Section 9 — Texte garantie 1', type:'textarea'},
+    {key:'s9P2', label:'Section 9 — Texte garantie 2', type:'textarea'},
+    {key:'s10Title', label:'Section 10 — Titre (émotion)', type:'text'},
+    {key:'s10P1', label:'Section 10 — Paragraphe 1', type:'textarea'},
+    {key:'s10P2', label:'Section 10 — Paragraphe 2', type:'textarea'},
+    {key:'s10P3', label:'Section 10 — Conclusion', type:'textarea'},
+    {key:'s11Title', label:'Section 11 — Titre (CTA final)', type:'text'},
+    {key:'s11P1', label:'Section 11 — Paragraphe 1', type:'textarea'},
+    {key:'s11P2', label:'Section 11 — Question 1', type:'text'},
+    {key:'s11P3', label:'Section 11 — Question 2', type:'textarea'},
+    {key:'s11P4', label:'Section 11 — Prix + garantie', type:'textarea'},
+    {key:'s11P5', label:'Section 11 — Urgence', type:'textarea'},
+    {key:'s11P6', label:'Section 11 — Conclusion', type:'textarea'},
+    {key:'signatureSign', label:'Signature — Formule de politesse', type:'text'},
+    {key:'signatureName', label:'Signature — Nom auteur', type:'text'},
+    {key:'signaturePS1', label:'Post-scriptum 1', type:'textarea'},
+    {key:'signaturePS2', label:'Post-scriptum 2', type:'textarea'},
+    {key:'ctaFinalTop', label:'Bloc final — Mention livraison', type:'text'},
+    {key:'ctaFinalTitle', label:'Bloc final — Titre produit', type:'textarea'},
+    {key:'ctaFinalStock', label:'Bloc final — Alerte stock', type:'text'},
+    {key:'ctaFinalSubStock', label:'Bloc final — Sous-alerte stock', type:'text'},
+    {key:'ctaFinalBtn', label:'Bloc final — Texte bouton', type:'text'},
+    {key:'ctaFinalBadge1', label:'Bloc final — Badge 1', type:'text'},
+    {key:'ctaFinalBadge2', label:'Bloc final — Badge 2', type:'text'},
+    {key:'ctaFinalBadge3', label:'Bloc final — Badge 3', type:'text'},
+    {key:'footerDisclaimer', label:'Footer — Disclaimer légal', type:'textarea'},
+    {key:'footerCopyright', label:'Footer — Copyright', type:'text'}
+  ];
+
+  var IMAGE_DEFS = [
+    {key:'logo', label:'Logo du site'},
+    {key:'hero', label:'Image hero principale (produit)'},
+    {key:'product1', label:'Image produit 2 (milieu article)'},
+    {key:'product2', label:'Image produit 3 (section science)'},
+    {key:'testimonial1', label:'Photo témoignage 1'},
+    {key:'testimonial2', label:'Photo témoignage 2'}
+  ];
+
+  var COLOR_LABELS = {
+    '--bg':             'Fond principal',
+    '--text':           'Texte principal',
+    '--text-muted':     'Texte secondaire',
+    '--accent':         'Couleur accent (rouge)',
+    '--accent-hover':   'Accent au survol',
+    '--sponsored-bg':   'Fond barre sponsorisée',
+    '--sponsored-text': 'Texte barre sponsorisée',
+    '--border':         'Bordures',
+    '--section-bg':     'Fond sections',
+    '--quote-bg':       'Fond citations',
+    '--stock-bg':       'Fond badge stock',
+    '--stock-text':     'Texte badge stock',
+    '--badge-bg':       'Fond badges confiance',
+    '--badge-border':   'Bordure badges confiance',
+    '--cta-text':       'Texte boutons CTA',
+    '--timer-bg':       'Fond timer',
+    '--timer-text':     'Texte timer',
+    '--trust-icon':     'Couleur icônes confiance',
+    '--footer-bg':      'Fond footer',
+    '--footer-text':    'Texte footer'
+  };
+
+  var ITEM_COUNT = 7;
+  var ITEM_TITLES = {
+    item1:'Introduction — Thomas Dupont',
+    item2:'Comment j\'ai tout essayé',
+    item3:'Découverte réseaux sociaux',
+    item4:'Calendrier de récupération',
+    item5:'La science SeverX',
+    item6:'Témoignages parents',
+    item7:'CTA final + Garantie'
+  };
+
+  /* ── INIT ── */
+  function initConfigLoad() {
+    if (CFG.supabaseUrl && CFG.supabaseAnonKey && window.supabase) {
+      try {
+        supabaseClient = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey);
+        supabaseClient.from('funnel_config').select('config').eq('funnel_id', CFG.funnelId).single()
+          .then(function(res) {
+            if (res.data && res.data.config) {
+              CFG = deepMerge(CFG, res.data.config);
+            }
+          }).catch(function(){});
+      } catch(e) {}
+    }
+  }
+
+  function deepMerge(base, over) {
+    var result = {};
+    for (var k in base) { if (base.hasOwnProperty(k)) result[k] = base[k]; }
+    for (var k in over) {
+      if (!over.hasOwnProperty(k)) continue;
+      if (over[k] && typeof over[k]==='object' && !Array.isArray(over[k]) && base[k] && typeof base[k]==='object') {
+        result[k] = deepMerge(base[k], over[k]);
+      } else { result[k] = over[k]; }
+    }
+    return result;
+  }
+
+  initConfigLoad();
+
+  /* ── LOGIN ── */
+  window.doLogin = function() {
+    var pw = document.getElementById('login-pw').value;
+    if (pw === (CFG.adminPassword || 'admin2026')) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+      buildAdmin();
+      loadDashboard();
+    } else {
+      document.getElementById('login-error').textContent = 'Mot de passe incorrect.';
+    }
+  };
+
+  window.doLogout = function() {
+    document.getElementById('admin-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('login-pw').value = '';
+  };
+
+  /* ── TABS ── */
+  window.showTab = function(name) {
+    document.querySelectorAll('.tab-panel').forEach(function(el) { el.classList.remove('active'); });
+    document.querySelectorAll('.sidebar-link').forEach(function(el) { el.classList.remove('active'); });
+    var panel = document.getElementById('tab-' + name);
+    var nav = document.getElementById('tab-nav-' + name);
+    if (panel) panel.classList.add('active');
+    if (nav) nav.classList.add('active');
+  };
+
+  /* ── DATE FILTER ── */
+  window.setDateFilter = function(filter, btn) {
+    currentDateFilter = filter;
+    document.querySelectorAll('.date-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var rangeInputs = document.getElementById('date-range-inputs');
+    if (filter === 'custom') {
+      rangeInputs.classList.add('visible');
+    } else {
+      rangeInputs.classList.remove('visible');
+      loadDashboard();
+    }
+  };
+
+  function getDateRange() {
+    var now = new Date();
+    var from, to;
+    to = now.toISOString();
+    if (currentDateFilter === 'today') {
+      from = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+    } else if (currentDateFilter === '7d') {
+      from = new Date(now.getTime() - 7*24*60*60*1000).toISOString();
+    } else if (currentDateFilter === '30d') {
+      from = new Date(now.getTime() - 30*24*60*60*1000).toISOString();
+    } else {
+      var df = document.getElementById('date-from').value;
+      var dt = document.getElementById('date-to').value;
+      from = df ? new Date(df).toISOString() : new Date(now.getTime() - 30*24*60*60*1000).toISOString();
+      to = dt ? new Date(dt + 'T23:59:59').toISOString() : to;
+    }
+    return { from: from, to: to };
+  }
+
+  /* ── DASHBOARD ── */
+  window.loadDashboard = function() {
+    if (!supabaseClient) {
+      showNoDashboard();
+      return;
+    }
+    var range = getDateRange();
+    supabaseClient.from('funnel_events')
+      .select('event_type, event_data, created_at, visitor_id')
+      .eq('funnel_id', CFG.funnelId)
+      .gte('created_at', range.from)
+      .lte('created_at', range.to)
+      .then(function(res) {
+        if (res.error || !res.data) { showNoDashboard(); return; }
+        renderDashboard(res.data);
+      }).catch(showNoDashboard);
+  };
+
+  function showNoDashboard() {
+    document.getElementById('kpi-visitors').textContent = '—';
+    document.getElementById('kpi-conv').textContent = '—';
+    document.getElementById('kpi-scroll').textContent = '—';
+    document.getElementById('kpi-cta').textContent = '—';
+    document.getElementById('funnel-viz').innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0;">Configurez Supabase dans Réglages pour voir les analytics.</div>';
+    document.getElementById('hourly-bars').innerHTML = '';
+  }
+
+  function renderDashboard(events) {
+    var pageViews = events.filter(function(e) { return e.event_type === 'page_view'; });
+    var scroll25  = events.filter(function(e) { return e.event_type === 'scroll_25'; });
+    var scroll50  = events.filter(function(e) { return e.event_type === 'scroll_50'; });
+    var ctaClicks = events.filter(function(e) { return e.event_type === 'cta_click'; });
+
+    var visitors = pageViews.length;
+    var convRate = visitors > 0 ? ((ctaClicks.length / visitors) * 100).toFixed(1) : 0;
+
+    var scrollScores = {};
+    events.forEach(function(e) {
+      if (!scrollScores[e.visitor_id]) scrollScores[e.visitor_id] = 0;
+      if (e.event_type === 'scroll_25') scrollScores[e.visitor_id] = Math.max(scrollScores[e.visitor_id], 25);
+      if (e.event_type === 'scroll_50') scrollScores[e.visitor_id] = Math.max(scrollScores[e.visitor_id], 50);
+      if (e.event_type === 'scroll_75') scrollScores[e.visitor_id] = Math.max(scrollScores[e.visitor_id], 75);
+      if (e.event_type === 'scroll_100') scrollScores[e.visitor_id] = Math.max(scrollScores[e.visitor_id], 100);
+    });
+    var vals = Object.values(scrollScores);
+    var avgScroll = vals.length > 0 ? Math.round(vals.reduce(function(a,b){return a+b;},0) / vals.length) : 0;
+
+    document.getElementById('kpi-visitors').textContent = visitors;
+    document.getElementById('kpi-conv').textContent = convRate + '%';
+    document.getElementById('kpi-scroll').textContent = avgScroll + '%';
+    document.getElementById('kpi-cta').textContent = ctaClicks.length;
+
+    // Funnel
+    var levels = [
+      {label:'Niveau 1 — Page vue', count: visitors, color:'rgba(232,39,42,0.9)'},
+      {label:'Niveau 2 — Scroll 25%', count: scroll25.length, color:'rgba(232,39,42,0.7)'},
+      {label:'Niveau 3 — Scroll 50%', count: scroll50.length, color:'rgba(232,39,42,0.5)'},
+      {label:'Niveau 4 — Clic CTA', count: ctaClicks.length, color:'rgba(232,39,42,0.35)'}
+    ];
+    var funnelHtml = '';
+    levels.forEach(function(lvl, i) {
+      var pct = visitors > 0 ? Math.round((lvl.count / visitors) * 100) : 0;
+      var dropoff = i > 0 && levels[i-1].count > 0 ? Math.round((1 - lvl.count/levels[i-1].count)*100) : null;
+      funnelHtml += '<div class="funnel-level">';
+      funnelHtml += '<div class="funnel-level-header"><span>' + lvl.label + '</span><span>' + lvl.count + ' visiteurs' + (dropoff !== null ? ' &nbsp;▼ −'+dropoff+'%' : '') + '</span></div>';
+      funnelHtml += '<div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:' + pct + '%;background:' + lvl.color + ';">' + (pct > 5 ? pct+'%' : '') + '</div></div>';
+      funnelHtml += '</div>';
+    });
+    document.getElementById('funnel-viz').innerHTML = funnelHtml;
+
+    // Hourly chart
+    var hourCounts = new Array(24).fill(0);
+    pageViews.forEach(function(e) {
+      var h = new Date(e.created_at).getHours();
+      hourCounts[h]++;
+    });
+    var maxH = Math.max.apply(null, hourCounts) || 1;
+    var barsHtml = '';
+    var labelsHtml = '';
+    hourCounts.forEach(function(count, h) {
+      var barH = Math.round((count / maxH) * 76);
+      barsHtml += '<div class="hourly-bar" style="height:' + barH + 'px" title="' + h + 'h: ' + count + ' visiteurs"></div>';
+      labelsHtml += '<div class="hourly-label">' + (h % 4 === 0 ? h+'h' : '') + '</div>';
+    });
+    document.getElementById('hourly-bars').innerHTML = barsHtml;
+    document.getElementById('hourly-labels').innerHTML = labelsHtml;
+  }
+
+  /* ── BUILD ADMIN ── */
+  function buildAdmin() {
+    buildTextes();
+    buildImages();
+    buildColors();
+    buildItemToggles();
+    // Static fields
+    document.getElementById('cfg-ctaUrl').value = CFG.ctaUrl || '';
+    document.getElementById('cfg-font-headline').value = (CFG.fonts && CFG.fonts.headline) || '';
+    document.getElementById('cfg-font-body').value = (CFG.fonts && CFG.fonts.body) || '';
+    document.getElementById('cfg-metaPixelId').value = CFG.metaPixelId || '';
+    document.getElementById('cfg-gaId').value = CFG.gaId || '';
+    document.getElementById('cfg-supabaseUrl').value = CFG.supabaseUrl || '';
+    document.getElementById('cfg-supabaseAnonKey').value = CFG.supabaseAnonKey || '';
+  }
+
+  /* ── TEXTES ── */
+  function buildTextes() {
+    var container = document.getElementById('textes-container');
+    var html = '';
+    var sections = {};
+    TEXT_DEFS.forEach(function(def) {
+      var sectionKey = def.key.match(/^([a-z]+\d*)/i);
+      var sec = sectionKey ? sectionKey[0].replace(/\d+$/, '') : 'other';
+      if (!sections[sec]) sections[sec] = [];
+      sections[sec].push(def);
+    });
+    TEXT_DEFS.forEach(function(def) {
+      var val = (CFG.texts && CFG.texts[def.key]) || '';
+      var cleanVal = val.replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/<[^>]*>/g, '');
+      if (def.type === 'textarea') {
+        html += '<div class="card"><div class="field-group">';
+        html += '<label class="field-label">' + def.label + '</label>';
+        html += '<textarea class="field-textarea" data-text-key="' + def.key + '">' + escHtml(cleanVal) + '</textarea>';
+        html += '</div></div>';
+      } else {
+        html += '<div class="card"><div class="field-group">';
+        html += '<label class="field-label">' + def.label + '</label>';
+        html += '<input class="field-input" type="text" data-text-key="' + def.key + '" value="' + escAttr(cleanVal) + '">';
+        html += '</div></div>';
+      }
+    });
+    container.innerHTML = html;
+  }
+
+  /* ── IMAGES ── */
+  function buildImages() {
+    var container = document.getElementById('images-container');
+    var html = '';
+    IMAGE_DEFS.forEach(function(def) {
+      var url = (CFG.images && CFG.images[def.key]) || '';
+      html += '<div class="image-item">';
+      html += '<div class="image-item-label">' + def.label + '</div>';
+      html += '<div class="image-placeholder' + (url ? ' hidden' : '') + '" id="ph-' + def.key + '">🖼️</div>';
+      html += '<img class="image-preview' + (url ? ' visible' : '') + '" id="prev-' + def.key + '" src="' + escAttr(url) + '" alt="">';
+      html += '<input class="field-input" type="url" data-image-key="' + def.key + '" value="' + escAttr(url) + '" placeholder="https://..." oninput="previewImage(this,\'' + def.key + '\')">';
+      html += '</div>';
+    });
+    container.innerHTML = html;
+  }
+
+  window.previewImage = function(inp, key) {
+    var url = inp.value.trim();
+    var prev = document.getElementById('prev-' + key);
+    var ph = document.getElementById('ph-' + key);
+    if (url) {
+      prev.src = url;
+      prev.classList.add('visible');
+      ph.classList.add('hidden');
+    } else {
+      prev.classList.remove('visible');
+      ph.classList.remove('hidden');
+    }
+  };
+
+  /* ── COLORS ── */
+  function buildColors() {
+    var container = document.getElementById('colors-container');
+    var html = '';
+    var colors = CFG.colors || {};
+    Object.keys(COLOR_LABELS).forEach(function(colorKey) {
+      var val = colors[colorKey] || '#ffffff';
+      html += '<div class="color-item">';
+      html += '<div class="color-item-label">' + COLOR_LABELS[colorKey] + '</div>';
+      html += '<div class="color-pickers">';
+      html += '<div class="color-swatch"><input type="color" data-color-key="' + colorKey + '" value="' + escAttr(val) + '" oninput="syncColorHex(this)"></div>';
+      html += '<input class="color-hex" type="text" data-color-hex-for="' + colorKey + '" value="' + escAttr(val) + '" oninput="syncColorPicker(this)" maxlength="7">';
+      html += '</div></div>';
+    });
+    container.innerHTML = html;
+  }
+
+  window.syncColorHex = function(picker) {
+    var key = picker.getAttribute('data-color-key');
+    var hex = document.querySelector('[data-color-hex-for="' + key + '"]');
+    if (hex) hex.value = picker.value;
+  };
+  window.syncColorPicker = function(hexInput) {
+    var key = hexInput.getAttribute('data-color-hex-for');
+    var picker = document.querySelector('[data-color-key="' + key + '"]');
+    if (picker && /^#[0-9a-fA-F]{6}$/.test(hexInput.value)) picker.value = hexInput.value;
+  };
+
+  /* ── ITEM TOGGLES ── */
+  function buildItemToggles() {
+    var enabled = CFG.itemsEnabled || {};
+    var html = '';
+    for (var i = 1; i <= ITEM_COUNT; i++) {
+      var key = 'item' + i;
+      var isOn = enabled[key] !== false;
+      var title = ITEM_TITLES[key] || ('Section ' + i);
+      html += '<div class="item-card' + (isOn ? '' : ' disabled') + '" id="item-card-' + key + '">';
+      html += '<div class="item-num">' + i + '</div>';
+      html += '<div class="item-info"><div class="item-title-preview">' + escHtml(title) + '</div></div>';
+      html += '<div class="toggle-wrap">';
+      html += '<label class="toggle"><input type="checkbox" data-item-toggle="' + key + '"' + (isOn ? ' checked' : '') + ' onchange="onItemToggle(this)"><span class="toggle-slider"></span></label>';
+      html += '<span class="toggle-label" id="toggle-lbl-' + key + '">' + (isOn ? 'ON' : 'OFF') + '</span>';
+      html += '</div></div>';
+    }
+    document.getElementById('items-cards').innerHTML = html;
+    updateItemsCountLabel();
+  }
+
+  window.onItemToggle = function(chk) {
+    var key = chk.getAttribute('data-item-toggle');
+    var card = document.getElementById('item-card-' + key);
+    var lbl = document.getElementById('toggle-lbl-' + key);
+    if (chk.checked) {
+      card.classList.remove('disabled');
+      lbl.textContent = 'ON';
+    } else {
+      card.classList.add('disabled');
+      lbl.textContent = 'OFF';
+    }
+    updateItemsCountLabel();
+  };
+
+  function updateItemsCountLabel() {
+    var count = document.querySelectorAll('[data-item-toggle]:checked').length;
+    var el = document.getElementById('items-count-label');
+    if (el) el.textContent = count + ' section' + (count > 1 ? 's' : '') + ' activée' + (count > 1 ? 's' : '');
+  }
+
+  window.bulkItems = function(val) {
+    document.querySelectorAll('[data-item-toggle]').forEach(function(chk) {
+      chk.checked = val;
+      onItemToggle(chk);
+    });
+  };
+
+  /* ── COLLECT CONFIG ── */
+  function collectConfig() {
+    var cfg = { colors:{}, images:{}, texts:{}, itemsEnabled:{} };
+
+    // Colors
+    document.querySelectorAll('[data-color-hex-for]').forEach(function(el) {
+      cfg.colors[el.getAttribute('data-color-hex-for')] = el.value;
+    });
+
+    // Images
+    document.querySelectorAll('[data-image-key]').forEach(function(el) {
+      cfg.images[el.getAttribute('data-image-key')] = el.value.trim();
+    });
+
+    // Texts
+    document.querySelectorAll('[data-text-key]').forEach(function(el) {
+      cfg.texts[el.getAttribute('data-text-key')] = el.value;
+    });
+
+    // Items enabled
+    document.querySelectorAll('[data-item-toggle]').forEach(function(el) {
+      cfg.itemsEnabled[el.getAttribute('data-item-toggle')] = el.checked;
+    });
+
+    // Static fields
+    cfg.ctaUrl = document.getElementById('cfg-ctaUrl').value.trim();
+    cfg.fonts = {
+      headline: document.getElementById('cfg-font-headline').value.trim(),
+      body: document.getElementById('cfg-font-body').value.trim()
+    };
+    cfg.metaPixelId = document.getElementById('cfg-metaPixelId').value.trim();
+    cfg.gaId = document.getElementById('cfg-gaId').value.trim();
+    cfg.supabaseUrl = document.getElementById('cfg-supabaseUrl').value.trim();
+    cfg.supabaseAnonKey = document.getElementById('cfg-supabaseAnonKey').value.trim();
+    var newPw = document.getElementById('cfg-adminPassword').value;
+    if (newPw) cfg.adminPassword = newPw;
+
+    return cfg;
+  }
+
+  /* ── SAVE ── */
+  window.saveConfig = function() {
+    var cfg = collectConfig();
+    var btn = document.getElementById('save-btn');
+    var spinner = document.getElementById('save-spinner');
+    var saveLabel = document.getElementById('save-label');
+
+    if (!supabaseClient && cfg.supabaseUrl && cfg.supabaseAnonKey) {
+      try {
+        supabaseClient = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+      } catch(e) {}
+    }
+
+    if (!supabaseClient) {
+      showToast('⚠️ Configurez Supabase dans Réglages pour sauvegarder.', 'error');
+      return;
+    }
+
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    saveLabel.textContent = 'Sauvegarde...';
+
+    var funnelId = CFG.funnelId || 'advertorial';
+
+    supabaseClient.from('funnel_config')
+      .update({ config: cfg, updated_at: new Date().toISOString() })
+      .eq('funnel_id', funnelId)
+      .select()
+      .then(function(res) {
+        if (res.data && res.data.length > 0) {
+          onSaveSuccess();
+        } else {
+          supabaseClient.from('funnel_config')
+            .upsert({ funnel_id: funnelId, config: cfg, updated_at: new Date().toISOString() })
+            .select()
+            .then(function() { onSaveSuccess(); })
+            .catch(function(e) { onSaveError(e); });
+        }
+      })
+      .catch(function(e) { onSaveError(e); });
+
+    function onSaveSuccess() {
+      btn.disabled = false;
+      spinner.style.display = 'none';
+      saveLabel.textContent = '💾 Enregistrer';
+      showToast('✅ Sauvegardé avec succès !', 'success');
+    }
+    function onSaveError(e) {
+      btn.disabled = false;
+      spinner.style.display = 'none';
+      saveLabel.textContent = '💾 Enregistrer';
+      showToast('❌ Erreur : ' + (e && e.message ? e.message : 'vérifiez Supabase'), 'error');
+    }
+  };
+
+  /* ── TOAST ── */
+  function showToast(msg, type) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + (type || 'success') + ' show';
+    setTimeout(function() { t.classList.remove('show'); }, 3500);
+  }
+
+  /* ── UTILS ── */
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function escAttr(s) {
+    return String(s).replace(/"/g,'&quot;');
+  }
+
+})();
+</script>
+</body>
+</html>

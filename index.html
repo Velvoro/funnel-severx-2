@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexoryn SeverX — Chevillère pour enfants</title>
+  <style>
+    :root {
+      --bg:              #f5efe6;
+      --text:            #1a1a1a;
+      --text-muted:      #555555;
+      --accent:          #e8272a;
+      --accent-hover:    #c41e1e;
+      --subtitle-color:  #0d7a9a;
+      --cta-btn:         #1a2744;
+      --cta-btn-hover:   #0f1932;
+      --sponsored-bg:    #f0ebe1;
+      --sponsored-text:  #999999;
+      --border:          #e0d8ce;
+      --article-bg:      #ffffff;
+      --sidebar-bg:      #e8edf5;
+      --sidebar-border:  #d0d8e8;
+      --quote-bg:        #f0f4ff;
+      --stock-text:      #e8272a;
+      --badge-bg:        #fff8e1;
+      --badge-border:    #fdd835;
+      --footer-bg:       #ede7dd;
+      --footer-text:     #999999;
+      --font-headline:   'Merriweather', Georgia, serif;
+      --font-body:       'Lato', system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.75; }
+
+    /* ── SPONSORED ── */
+    .sponsored-bar { background: var(--sponsored-bg); text-align: center; padding: 7px 16px; font-size: 11px; letter-spacing: 2px; color: var(--sponsored-text); font-weight: 700; border-bottom: 1px solid var(--border); }
+
+    /* ── HEADER ── */
+    .site-header { background: var(--article-bg); border-bottom: 3px solid var(--text); padding: 12px 24px; display: flex; align-items: center; justify-content: center; }
+    .site-logo { font-family: var(--font-headline); font-size: 24px; font-weight: 900; color: var(--text); text-decoration: none; letter-spacing: -0.5px; }
+    .site-logo span { color: var(--accent); }
+
+    /* ── PAGE WRAPPER ── */
+    .page-wrapper { max-width: 1100px; margin: 0 auto; padding: 28px 20px 48px; }
+
+    /* ── 2-COLUMN LAYOUT ── */
+    .two-col { display: flex; gap: 28px; align-items: flex-start; }
+
+    /* ── LEFT ARTICLE ── */
+    .article-col { flex: 1; min-width: 0; background: var(--article-bg); border-radius: 4px; padding: 32px 36px; border: 1px solid var(--border); }
+
+    /* ── RIGHT SIDEBAR ── */
+    .sidebar-col { width: 320px; flex-shrink: 0; position: sticky; top: 20px; }
+    .sidebar-widget { background: var(--sidebar-bg); border: 1px solid var(--sidebar-border); border-radius: 8px; overflow: hidden; }
+
+    /* Sidebar product image */
+    .sidebar-img-wrap img { width: 100%; height: auto; display: block; }
+
+    /* Sidebar body */
+    .sidebar-body { padding: 20px; }
+    .sidebar-title { font-family: var(--font-headline); font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text); margin-bottom: 16px; line-height: 1.4; }
+
+    /* Benefits list */
+    .benefit-list { list-style: none; margin-bottom: 18px; }
+    .benefit-list li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--sidebar-border); font-size: 13px; line-height: 1.5; }
+    .benefit-list li:last-child { border-bottom: none; }
+    .benefit-icon { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.7); border: 1px solid var(--sidebar-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; }
+
+    /* Stock badge */
+    .stock-badge { background: #fff3f3; border: 1.5px solid var(--stock-text); border-radius: 6px; padding: 8px 12px; text-align: center; font-size: 12px; font-weight: 700; color: var(--stock-text); margin-bottom: 12px; line-height: 1.4; }
+
+    /* CTA button */
+    .btn-cta { display: block; width: 100%; background: var(--cta-btn); color: #ffffff; text-align: center; padding: 15px 20px; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; transition: background 0.2s; line-height: 1.3; text-transform: uppercase; }
+    .btn-cta:hover { background: var(--cta-btn-hover); }
+
+    /* Trust badges in sidebar */
+    .sidebar-trust { display: flex; flex-direction: column; gap: 8px; padding: 14px; background: rgba(255,255,255,0.5); border-top: 1px solid var(--sidebar-border); }
+    .sidebar-trust-item { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: var(--text-muted); }
+    .sidebar-trust-item span:first-child { font-size: 16px; }
+
+    /* ── ARTICLE CONTENT ── */
+    .article-h1 { font-family: var(--font-headline); font-size: clamp(20px, 3vw, 30px); font-weight: 900; line-height: 1.25; color: var(--text); margin-bottom: 16px; }
+    .article-sub { font-size: clamp(15px, 2vw, 18px); color: var(--subtitle-color); font-style: italic; line-height: 1.6; margin-bottom: 18px; }
+    .byline { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; margin-bottom: 24px; font-size: 13px; color: var(--text-muted); background: #faf6f0; }
+    .byline-avatar { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; overflow: hidden; }
+    .byline-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .byline strong { color: var(--text); font-size: 14px; display: block; }
+
+    /* Images */
+    .article-img { width: 100%; border-radius: 6px; display: block; margin: 24px 0; }
+
+    /* Paragraphs */
+    .article-col p { margin-bottom: 18px; font-size: clamp(15px, 2vw, 17px); line-height: 1.85; }
+    .article-col h2 { font-family: var(--font-headline); font-size: clamp(18px, 2.5vw, 23px); font-weight: 900; margin: 36px 0 14px; color: var(--text); line-height: 1.3; }
+    .article-col ul { list-style: none; margin: 14px 0 18px; padding: 0; }
+    .article-col ul li { padding: 8px 0 8px 26px; position: relative; font-size: clamp(14px, 2vw, 16px); line-height: 1.7; border-bottom: 1px solid #f0ebe3; }
+    .article-col ul li:last-child { border-bottom: none; }
+    .article-col ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+
+    /* Quote box */
+    .quote-box { background: var(--quote-bg); border-left: 4px solid var(--subtitle-color); border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 20px 0; font-size: clamp(14px, 2vw, 16px); font-style: italic; line-height: 1.7; }
+
+    /* Timeline */
+    .timeline { margin: 18px 0; }
+    .timeline-item { display: flex; gap: 14px; margin-bottom: 18px; align-items: flex-start; }
+    .timeline-badge { background: var(--cta-btn); color: #fff; font-size: 10px; font-weight: 800; padding: 5px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.5px; margin-top: 3px; }
+    .timeline-text { font-size: clamp(14px, 2vw, 16px); line-height: 1.75; }
+
+    /* Testimonial */
+    .testimonial-box { background: var(--badge-bg); border: 1px solid var(--badge-border); border-radius: 8px; padding: 18px 20px; margin: 18px 0; }
+    .testimonial-text { font-size: clamp(14px, 2vw, 16px); font-style: italic; line-height: 1.7; margin-bottom: 8px; }
+    .testimonial-author { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+
+    /* Comparison */
+    .comparison-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: clamp(14px, 2vw, 16px); line-height: 1.6; }
+    .comparison-item:last-child { border-bottom: none; }
+
+    /* Guarantee */
+    .guarantee-box { background: #f0faf0; border: 2px solid #a5d6a7; border-radius: 10px; padding: 22px; margin: 24px 0; text-align: center; }
+    .guarantee-icon { font-size: 42px; margin-bottom: 8px; }
+    .guarantee-title { font-family: var(--font-headline); font-size: 17px; font-weight: 900; margin-bottom: 10px; }
+
+    /* Divider */
+    hr.divider { border: none; border-top: 2px solid var(--border); margin: 32px 0; }
+
+    /* Secure bar */
+    .secure-bar { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; margin: 10px 0; }
+
+    /* Signature */
+    .signature-block { margin: 28px 0; padding: 22px; background: #faf6f0; border-radius: 8px; border: 1px solid var(--border); }
+    .signature-name { font-family: var(--font-headline); font-size: 19px; font-weight: 700; margin-bottom: 16px; }
+    .signature-ps { font-size: clamp(13px, 1.8vw, 15px); line-height: 1.7; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+
+    /* Final CTA block — NAVY fond, bouton ORANGE */
+    .final-cta-block { background: #1a2744; color: #fff; border-radius: 10px; padding: 32px 28px; text-align: center; margin-top: 32px; }
+    .final-cta-block .final-title { font-family: var(--font-headline); font-size: clamp(18px, 3vw, 24px); font-weight: 900; margin-bottom: 14px; line-height: 1.3; }
+    .final-cta-block .stock-badge { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #ffcc99; margin: 0 auto 16px; max-width: 480px; }
+    .final-cta-block .btn-cta { background: #e8831a; max-width: 480px; margin: 12px auto; font-size: 17px; padding: 18px 24px; border-radius: 6px; }
+    .final-cta-block .btn-cta:hover { background: #d07210; }
+    .final-trust-row { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 14px; }
+    .final-trust-item { font-size: 12px; opacity: 0.9; display: flex; align-items: center; gap: 5px; font-weight: 600; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .two-col { flex-direction: column; }
+      .sidebar-col { width: 100%; position: static; }
+      .article-col { padding: 20px 16px; }
+      .page-wrapper { padding: 16px 12px 40px; }
+      .site-header img { max-height: 90px !important; }
+    }
+
+    /* ── FOOTER ── */
+    .site-footer { background: var(--footer-bg); border-top: 1px solid var(--border); padding: 24px 20px; }
+    .site-footer p { font-size: 11px; color: var(--footer-text); text-align: center; line-height: 1.8; max-width: 720px; margin: 0 auto 6px; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <a href="https://flexoryn.com">
+      <img src="https://cdn.shopify.com/s/files/1/0696/4251/8616/files/2mag.png?v=1780341786" alt="Flexoryn" style="max-height:180px;max-width:100%;width:auto;display:block;">
+    </a>
+  </header>
+
+  <div class="page-wrapper">
+    <div class="two-col">
+
+      <!-- ═══ LEFT: ARTICLE ═══ -->
+      <article class="article-col">
+
+        <h1 class="article-h1" id="h1">« Mon fils de 11 ans est passé de boiter sur le terrain de football à marquer le but de la victoire — voici la découverte à 29€ qui a tout changé »</h1>
+        <p class="article-sub" id="h1Sub">Comment un père de la région lyonnaise a enfin trouvé une vraie solution contre les douleurs au talon de son fils (après avoir dépensé 445€ en traitements inefficaces)</p>
+
+        <!-- BYLINE -->
+        <div class="byline">
+          <div class="byline-avatar">
+            <img src="https://cdn.shopify.com/s/files/1/0696/4251/8616/files/imgi_73_Face_430x_2acc05c4-0338-4464-979f-b3f0a123ef93.jpg?v=1774753703" alt="Thomas Dupont" id="img-avatar">
+          </div>
+          <div>
+            <strong id="byline">Par Thomas Dupont, Papa de footballeur</strong>
+            <span id="bylineDate">Mardi 4 mars 2025</span>
+          </div>
+        </div>
+
+        <!-- MAIN ARTICLE IMAGE -->
+        <img src="https://cdn.shopify.com/s/files/1/0696/4251/8616/files/003_gempages_577032515898835859-4dedcc95-c3d8-4c5b-b223-795bd1c84ea6.jpg?v=1780336689" alt="Enfant footballeur douleur talon" class="article-img" id="img-hero" loading="lazy">
+
+        <!-- INTRO -->
+        <p id="introP1">Je n'aurais jamais imaginé partager en ligne l'histoire de mon fils qui boite. Mais après ce qui s'est passé ces six dernières semaines, je devais en parler à tous les parents qui voient leurs jeunes sportifs traverser la même épreuve.</p>
+        <p id="introP2">Je m'appelle <strong>Thomas Dupont</strong>. J'ai 41 ans, je vis en région lyonnaise, et pendant plus d'un an, j'ai regardé mon fils Lucas se transformer d'un footballeur confiant en un gamin qui avait vraiment peur de courir.</p>
+        <p id="introP3">Le moment qui m'a vraiment brisé ?</p>
+        <p id="introP4">Voir Lucas hésiter ce qui semblait une éternité au bord du terrain de football, visiblement terrorisé à l'idée que ses talons lui fassent mal dès qu'il se mettrait à courir. Quand il a finalement essayé de sprinter, il a tenu peut-être dix minutes avant de quitter le terrain en larmes.</p>
+        <p id="introP5">C'est là que j'ai compris que ce n'était plus seulement une question de douleur au talon. <strong>Ça affectait tout ce qu'était Lucas en tant que gamin.</strong></p>
+
+        <hr class="divider">
+
+        <!-- SECTION 1 -->
+        <h2 id="s1Title">Comment j'ai tout essayé (et rien n'a fonctionné)</h2>
+        <p id="s1P1">Comme tout père désespéré, j'ai essayé toutes les solutions recommandées par les médecins contre la maladie de Sever. Voici ce que ça m'a coûté, même après remboursements :</p>
+        <ul>
+          <li id="s1Li1">Talonnettes de pharmacie : <strong>35€</strong> (non remboursées, et elles glissaient constamment dans ses crampons)</li>
+          <li id="s1Li2">Kinésithérapie sur 3 mois : <strong>120€ de reste à charge</strong> (amélioration temporaire, la douleur est revenue dès la reprise)</li>
+          <li id="s1Li3">Semelles orthopédiques sur-mesure : <strong>95€</strong> après remboursements (six semaines d'attente, Lucas les a dépassées en quatre mois)</li>
+          <li id="s1Li4">Consultations spécialisées : <strong>65€</strong> de dépassements d'honoraires (quinze minutes et "reposez-vous davantage")</li>
+          <li id="s1Li5">Botte orthopédique : <strong>130€</strong> (il a raté la moitié de sa saison)</li>
+        </ul>
+        <div class="quote-box" id="s1Total"><strong>Total dépensé (après remboursements) : 445€</strong></div>
+        <p id="s1P2">Mais honnêtement, l'argent n'était même pas le pire. Le pire, c'était de voir Lucas passer de ce gamin qui dormait avec son ballon de football à dire des choses comme : "Papa, peut-être que le sport, c'est pas fait pour moi."</p>
+        <p id="s1P3"><strong>Ça me brisait le cœur chaque jour.</strong></p>
+
+        <hr class="divider">
+
+        <!-- SECTION 2 -->
+        <h2 id="s2Title">La découverte tardive sur les réseaux sociaux</h2>
+        <p id="s2P1">Un soir, j'étais dans notre groupe Facebook de parents de footballeurs de la région — probablement ma centième recherche sur 'douleurs au talon enfant' — quand je suis tombé sur une publication qui a retenu mon attention :</p>
+        <div class="quote-box" id="s2Quote1">« J'ai enfin trouvé un traitement contre les douleurs au talon pour enfants qui marche vraiment – la Chevillère SeverX de Flexoryn »</div>
+        <p id="s2P2">Les commentaires ont explosé. De vrais parents postant de vraies vidéos de leurs enfants. Mais un commentaire m'a fait stopper le défilement :</p>
+        <div class="quote-box" id="s2Quote2">« Mon fils joue au basket. Sa maladie de Sever était tellement avancée qu'il ne pouvait pas marquer sans grimacer. Trois semaines avec SeverX et il vient d'être sélectionné pour le tournoi régional. J'écris ça les yeux humides. »</div>
+        <ul>
+          <li id="s2Li1">Les cartilages de croissance des enfants ont besoin de soutien pendant la guérison, pas seulement de repos</li>
+          <li id="s2Li2">Les solutions génériques pour adultes ne fonctionnent pas pour les jeunes sportifs en pleine croissance</li>
+          <li id="s2Li3">Le cycle douleur-repos-douleur vole des saisons entières aux enfants</li>
+          <li id="s2Li4">Les jeunes athlètes doivent pouvoir continuer à bouger en sécurité pendant leur guérison</li>
+        </ul>
+        <p id="s2P3">À 29€, ça coûtait moins cher qu'une seule séance de kiné. Je me suis dit : pourquoi ne pas essayer, à ce stade ?</p>
+        <p id="s2P4"><strong>J'ai commandé le même soir.</strong></p>
+
+        <!-- IMAGE after "J'ai commandé le même soir." -->
+        <img src="https://cdn.shopify.com/s/files/1/0696/4251/8616/files/004_gempages_577032515898835859-c0201084-76c7-4896-8624-d8e8bf3bb24c.jpg?v=1780336688" alt="Chevillère SeverX" class="article-img" id="img-product-order" loading="lazy">
+
+        <hr class="divider">
+
+        <!-- SECTION 3 — TIMELINE -->
+        <h2 id="s3Title">Le calendrier de récupération</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-badge" id="s3W1Title">Semaine 1</div>
+            <div class="timeline-text" id="s3W1">Lucas a mis la chevillère et a immédiatement dit que c'était différent — plus enveloppant que tout ce qu'on avait essayé. Au bout de 4 jours, il s'est levé et a marché normalement pour la première fois depuis plus d'un an. J'ai failli avoir les larmes aux yeux.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-badge" id="s3W2Title">Semaine 2</div>
+            <div class="timeline-text" id="s3W2">Les boitements du matin, qui faisaient partie de notre routine, avaient tout simplement… disparu. Lucas commençait à demander à aller à l'entraînement en avance. Son entraîneur m'a même pris à part pour me dire : "Quoi que vous fassiez, continuez. Il ressemble à lui-même à nouveau."</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-badge" id="s3W3Title">Semaine 3</div>
+            <div class="timeline-text" id="s3W3">Lucas a marqué son premier but en plus d'un an et a réellement sprinté pour fêter ça, au lieu de son petit trot habituel plein de précautions. On voyait la confiance revenir.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-badge" id="s3W4Title">Semaine 4</div>
+            <div class="timeline-text" id="s3W4">Progrès majeur. Il se déplaçait librement — sans hésitation, sans boiter — et son sourire était de retour.</div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- IMAGE before "La science qui m'a enfin parlé" -->
+        <img src="https://cdn.shopify.com/s/files/1/0696/4251/8616/files/7_ef2c3a95-0a24-44cb-b651-7c5d5681abcf.webp?v=1780130551" alt="SeverX chevillère enfant sport" class="article-img" id="img-science-top" loading="lazy">
+
+        <!-- SECTION 4 — SCIENCE -->
+        <h2 id="s4Title">La science qui m'a enfin parlé</h2>
+        <p id="s4P1">Après avoir vu Lucas s'améliorer aussi vite, j'avais besoin de comprendre pourquoi cette chevillère fonctionnait là où tout le reste avait échoué.</p>
+        <p><strong id="s4HowTitle">Comment SeverX fonctionne :</strong></p>
+        <ul>
+          <li id="s4Li1">Compression ciblée autour du cartilage de croissance pour réduire l'inflammation</li>
+          <li id="s4Li2">Soutien spécialisé du talon qui corrige les problèmes biomécaniques à l'origine des blessures répétées</li>
+          <li id="s4Li3">Design enveloppant à 360° qui reste en place pendant le sport</li>
+          <li id="s4Li4">Conception spécifique aux enfants, pensée pour les pieds en croissance — et non une simple version réduite des produits adultes</li>
+        </ul>
+        <p id="s4P2">Ce n'est pas juste une chaussette de compression avec du marketing sophistiqué. <strong>C'est de la véritable médecine sportive, conçue spécifiquement pour les enfants souffrant de problèmes de cartilages de croissance.</strong></p>
+
+        <hr class="divider">
+
+        <!-- SECTION 5 -->
+        <h2 id="s5Title">Pourquoi tout le reste est passé à côté</h2>
+        <p id="s5P1">Les talonnettes de pharmacie ne sont fondamentalement que des coussins qui glissent. Ça peut soulager un peu, mais <strong>ça ne règle rien.</strong></p>
+        <p id="s5P2">Les semelles orthopédiques sur-mesure pourraient fonctionner si votre enfant ne grandissait pas et ne devenait pas plus actif. En réalité, <strong>elles sont coûteuses, partiellement remboursées, et dépassées avant même d'arriver.</strong></p>
+        <p id="s5P3">Le "repos et attente" ignore le fait que les mêmes forces qui causent la blessure sont toujours là quand votre enfant reprend le sport.</p>
+        <p id="s5P4">J'ai dépensé 445€ en traitements conçus pour gérer des symptômes. <strong>SeverX a traité la cause réelle du problème, pour 29€.</strong></p>
+
+        <hr class="divider">
+
+        <!-- SECTION 6 — TESTIMONIALS -->
+        <h2 id="s6Title">Ce que disent les autres parents</h2>
+        <p id="s6P1">Après avoir partagé l'histoire de Lucas dans le groupe Facebook, j'ai reçu des messages de parents que je ne connaissais pas :</p>
+        <div class="testimonial-box">
+          <p class="testimonial-text" id="s6T1Text">« Mon fils joue au rugby et les douleurs au talon sabotaient sa confiance sur le terrain. Quatre semaines avec SeverX et il est de retour à 100%. Merci de l'avoir partagé. »</p>
+          <p class="testimonial-author" id="s6T1Author">- Sophie de Lyon</p>
+        </div>
+        <div class="testimonial-box">
+          <p class="testimonial-text" id="s6T2Text">« On était sur le point de retirer notre fille de la gym avant la saison de compétition. Trois semaines avec SeverX et elle performe sans douleur. Ça lui a littéralement sauvé sa saison. »</p>
+          <p class="testimonial-author" id="s6T2Author">- Marc de Bordeaux</p>
+        </div>
+        <p id="s6P2">Le constat était clair : <strong>SeverX aidait les enfants à redevenir des enfants.</strong></p>
+
+        <hr class="divider">
+
+        <!-- SECTION 7 -->
+        <h2 id="s7Title">Le vrai coût de "l'attente"</h2>
+        <p id="s7P1">Voici ce que j'aurais voulu qu'on me dise lors de cette chère consultation chez le spécialiste : pendant que vous attendez que votre enfant "grandisse" hors de la maladie de Sever, voilà ce que vous perdez réellement :</p>
+        <ul>
+          <li id="s7Li1">Des saisons entières (Lucas a raté la majeure partie de l'automne, sa saison préférée)</li>
+          <li id="s7Li2">Sa place dans l'équipe et des opportunités de progression</li>
+          <li id="s7Li3">Sa condition physique après des mois d'activité réduite</li>
+          <li id="s7Li4">La confiance qui met des années à se construire</li>
+          <li id="s7Li5">L'amour du sport qui le définissait</li>
+        </ul>
+        <p id="s7P2"><strong>Chaque jour où j'ai suivi le conseil "attendez", c'était un jour de plus où la confiance sportive de Lucas s'éteignait un peu plus.</strong></p>
+
+        <hr class="divider">
+
+        <!-- SECTION 8 — COMPARISON -->
+        <h2 id="s8Title">Pourquoi SeverX est plus efficace que tout le reste</h2>
+        <div class="comparison-item"><span>✅</span><span id="s8Li1"><strong>Vs les talonnettes :</strong> Elles ne font que rembourrer. SeverX corrige réellement le problème biomécanique.</span></div>
+        <div class="comparison-item"><span>✅</span><span id="s8Li2"><strong>Vs les semelles sur-mesure :</strong> Même après remboursement, elles restent chères, longues à obtenir, et les enfants les dépassent. SeverX coûte 29€ et s'adapte à la croissance.</span></div>
+        <div class="comparison-item"><span>✅</span><span id="s8Li3"><strong>Vs la kinésithérapie :</strong> Des séances régulières centrées sur des étirements. SeverX apporte un soutien continu pendant l'activité réelle.</span></div>
+        <div class="comparison-item"><span>✅</span><span id="s8Li4"><strong>Vs le repos :</strong> Garantit des saisons perdues. SeverX permet aux enfants de guérir tout en restant actifs.</span></div>
+
+        <hr class="divider">
+
+        <!-- SECTION 9 — GUARANTEE -->
+        <h2 id="s9Title">La garantie "Voyez-le fonctionner" 30 jours</h2>
+        <div class="guarantee-box">
+          <div class="guarantee-icon">🔄</div>
+          <div class="guarantee-title">Garantie satisfait ou remboursé 30 jours</div>
+          <p id="s9P1">SeverX offre une <strong>garantie satisfaction de 30 jours</strong>. Ils encouragent même les parents à suivre les progrès de leur enfant, car ils sont confiants que vous remarquerez une vraie différence.</p>
+          <p id="s9P2" style="margin-top:10px;">Si votre enfant ne ressent pas un soulagement significatif dans les 30 jours, vous obtenez un remboursement intégral — sans tracas, sans paperasse inutile.</p>
+        </div>
+
+        <hr class="divider">
+
+        <!-- SECTION 10 -->
+        <h2 id="s10Title">Ce qui m'émeut encore</h2>
+        <p id="s10P1">Quelques semaines après la disparition de la douleur de Lucas, j'étais à l'entraînement quand un autre parent a remarqué que j'avais l'air beaucoup plus détendu ces derniers temps.</p>
+        <p id="s10P2">Il avait raison. Pendant plus d'un an, je portais ce stress constant de voir mon fils lutter et de me sentir impuissant. Chaque boitement, chaque grimace, chaque fois qu'il restait assis — tout ça pesait sur moi.</p>
+        <p id="s10P3"><strong>SeverX n'a pas seulement aidé Lucas. Il a rendu la sérénité à toute notre famille.</strong></p>
+
+        <hr class="divider">
+
+        <!-- IMAGE above "Ne laissez pas..." -->
+        <img src="https://cdn.shopify.com/s/files/1/0696/4251/8616/files/006_gempages_577032515898835859-cf908348-7c2b-4caa-abfe-3e4bed127778.png?v=1780336690" alt="Enfant heureux retour au sport" class="article-img" id="img-final-push" loading="lazy">
+
+        <!-- SECTION 11 — FINAL PUSH -->
+        <h2 id="s11Title">Ne laissez pas une autre saison vous échapper</h2>
+        <p id="s11P1">Je sais que vous êtes probablement sceptique. Vous avez sans doute déjà dépensé de l'argent dans des traitements qui n'ont pas fonctionné. Vous avez vécu les déceptions et regardé la confiance de votre jeune sportif prendre coup après coup.</p>
+        <p id="s11P2">Mais et si cette fois, c'était différent ?</p>
+        <p id="s11P3">Et si dans un mois, votre enfant jouait sans peur ? Demandait à s'entraîner plus longtemps au lieu de trouver des excuses ? Attendait les matchs avec impatience au lieu de les redouter ?</p>
+        <p id="s11P4">Pour <strong>29€</strong> — moins cher qu'une seule séance chez un spécialiste — vous pourriez rendre confiance à votre jeune athlète. Et avec la garantie 30 jours, <strong>le seul risque, c'est de découvrir que la douleur de votre enfant était traitable depuis le début.</strong></p>
+        <p id="s11P5"><strong>N'attendez pas qu'il "grandisse" tout seul.</strong> Chaque jour où votre enfant joue avec la douleur peut rendre la guérison plus difficile — et la confiance encore plus basse.</p>
+        <p id="s11P6">Lucas a perdu plus d'un an à cause de douleurs au talon qui s'avéraient parfaitement traitables. <strong>Vous pouvez faire un choix différent aujourd'hui.</strong></p>
+
+        <div class="secure-bar">🔒 PAIEMENT SÉCURISÉ — GARANTIE 30 JOURS</div>
+        <a href="https://flexoryn.com" class="btn-cta" data-cta="cta_mid" id="ctaMidBtn" style="max-width:460px;margin:0 auto;display:block;">COMMANDER MA CHEVILLÈRE SEVERX</a>
+        <p style="text-align:center;color:var(--text-muted);font-size:13px;margin-top:10px;" id="ctaConverge">Dans un mois, vous partagerez vous aussi votre propre histoire, ou vous serez encore à chercher des réponses.</p>
+
+        <!-- SIGNATURE -->
+        <div class="signature-block">
+          <p style="font-style:italic;margin-bottom:4px;" id="signatureSign">Avec espoir,</p>
+          <p class="signature-name" id="signatureName">Thomas Dupont</p>
+          <p class="signature-ps" id="signaturePS1"><strong>P.S.</strong> Lucas vient d'intégrer l'équipe première de son club et joue avec plus de confiance que je n'en ai vue depuis deux ans. L'entraîneur a dit que son style de jeu courageux avait vraiment marqué les esprits lors des sélections. C'est ça que SeverX nous a rendu — pas seulement le soulagement de la douleur, mais la confiance naturelle de Lucas dans le sport.</p>
+          <p class="signature-ps" id="signaturePS2"><strong>P.P.S.</strong> Quand j'ai dit à Lucas que je partageais notre histoire, il a répondu : "Papa, si ça aide même un seul enfant à ne pas traverser ce que j'ai vécu, partage-la." C'est mon gamin — assez confiant maintenant pour vouloir aider les autres.</p>
+        </div>
+
+        <div style="text-align:center;font-size:11px;letter-spacing:2px;color:var(--text-muted);margin-bottom:10px;font-weight:700;" id="ctaFinalTop">COMMANDEZ MAINTENANT — TRAITÉ SOUS 24 HEURES</div>
+        <a href="https://flexoryn.com" class="btn-cta" data-cta="cta_bottom" style="max-width:460px;margin:0 auto;display:block;">PAIEMENT SÉCURISÉ — GARANTIE 30 JOURS</a>
+
+      </article>
+
+      <!-- ═══ RIGHT: STICKY SIDEBAR ═══ -->
+      <aside class="sidebar-col">
+        <div class="sidebar-widget">
+          <!-- Product image -->
+          <div class="sidebar-img-wrap">
+            <img src="https://cdn.shopify.com/s/files/1/0696/4251/8616/files/image_3.webp?v=1780241942" alt="Chevillère SeverX Flexoryn" id="img-sidebar-product" loading="lazy">
+          </div>
+
+          <div class="sidebar-body">
+            <h2 class="sidebar-title" id="sidebar-title">VOTRE ENFANT MÉRITE DE COURIR SANS SOUFFRIR</h2>
+
+            <ul class="benefit-list">
+              <li>
+                <div class="benefit-icon">🦶</div>
+                <div class="benefit-text" id="bullet1">Soulage rapidement les douleurs au talon et au pied — une compression ciblée soutient le cartilage de croissance pendant l'effort</div>
+              </li>
+              <li>
+                <div class="benefit-icon">⚽</div>
+                <div class="benefit-text" id="bullet2">Aide les enfants à rester actifs et confiants — courir, jouer et s'entraîner sans rechutes ni crainte que la douleur revienne</div>
+              </li>
+              <li>
+                <div class="benefit-icon">👟</div>
+                <div class="benefit-text" id="bullet3">Assez confortable pour être porté toute la journée — s'adapte facilement aux crampons, baskets et chaussures scolaires</div>
+              </li>
+            </ul>
+
+            <div class="stock-badge" id="stockBadge">🔴 DE NOUVEAU EN STOCK — Quantités limitées issues de notre dernière production</div>
+            <a href="https://flexoryn.com" class="btn-cta" data-cta="cta_sidebar" id="ctaHero">VÉRIFIER LA DISPONIBILITÉ DE MA TAILLE</a>
+          </div>
+
+          <!-- Trust badges -->
+          <div class="sidebar-trust">
+            <div class="sidebar-trust-item"><span>🔄</span><span id="badge1Title">Garantie satisfait ou remboursé 30 jours</span></div>
+            <div class="sidebar-trust-item"><span>🚚</span><span id="badge2Title">Livraison offerte</span></div>
+            <div class="sidebar-trust-item"><span>⭐</span><span id="badge3Title">Approuvé par plus de 50 000 parents</span></div>
+          </div>
+        </div>
+      </aside>
+
+    </div><!-- /two-col -->
+
+    <!-- FINAL CTA BLOCK — ORANGE -->
+    <div class="final-cta-block">
+      <p style="font-size:11px;letter-spacing:2px;opacity:0.8;margin-bottom:12px;font-weight:700;" id="ctaFinalTopBlock">COMMANDEZ MAINTENANT — TRAITÉ SOUS 24 HEURES</p>
+      <!-- Product image above final CTA -->
+      <img src="https://cdn.shopify.com/s/files/1/0696/4251/8616/files/image_3.webp?v=1780241942" alt="Chevillère SeverX" style="max-width:280px;width:100%;height:auto;display:block;margin:0 auto 20px;border-radius:8px;" id="img-final-cta" loading="lazy">
+      <h2 class="final-title" id="ctaFinalTitle">Offrez à votre enfant un soulagement en quelques jours — <strong>Économisez 50% sur SeverX dès aujourd'hui</strong></h2>
+      <div class="stock-badge" id="ctaFinalStock">🔴 VENTES RAPIDES — Des milliers de parents ont déjà adopté SeverX ce mois-ci.</div>
+      <p style="font-size:12px;opacity:0.8;margin-bottom:16px;" id="ctaFinalSubStock">*Stock limité disponible*</p>
+      <a href="https://flexoryn.com" class="btn-cta" data-cta="cta_final" id="ctaFinalBtn">Obtenir la Chevillère SeverX — 50% de réduction</a>
+      <div class="final-trust-row">
+        <div class="final-trust-item">🔄 <span id="ctaFinalBadge1">Garantie satisfait ou remboursé 30 jours</span></div>
+        <div class="final-trust-item">🚚 <span id="ctaFinalBadge2">Livraison offerte</span></div>
+        <div class="final-trust-item">⭐ <span id="ctaFinalBadge3">Approuvé par plus de 50 000 parents</span></div>
+      </div>
+    </div>
+
+  </div><!-- /page-wrapper -->
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p id="footerDisclaimer">Cet article est un contenu publicitaire. Les résultats individuels peuvent varier. Ces témoignages ne garantissent pas des résultats identiques pour chaque utilisateur. Flexoryn SeverX n'est pas un dispositif médical. Consultez un professionnel de santé pour tout problème médical.</p>
+    <p id="footerCopyright">© 2025 Flexoryn. Tous droits réservés. | flexoryn.com</p>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="tracker.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    function deepMerge(base, over) {
+      var r = {};
+      for (var k in base) { if (base.hasOwnProperty(k)) r[k] = base[k]; }
+      for (var k in over) {
+        if (!over.hasOwnProperty(k)) continue;
+        if (over[k] && typeof over[k]==='object' && !Array.isArray(over[k]) && base[k] && typeof base[k]==='object') r[k]=deepMerge(base[k],over[k]);
+        else r[k]=over[k];
+      }
+      return r;
+    }
+
+    function applyConfig(cfg) {
+      if (cfg.colors) Object.keys(cfg.colors).forEach(function(k){ document.documentElement.style.setProperty(k, cfg.colors[k]); });
+      if (cfg.fonts) {
+        var h=(cfg.fonts.headline||'Merriweather').replace(/ /g,'+');
+        var b=(cfg.fonts.body||'Lato').replace(/ /g,'+');
+        var lnk=document.createElement('link'); lnk.rel='stylesheet';
+        lnk.href='https://fonts.googleapis.com/css2?family='+h+':ital,wght@0,400;0,700;0,900;1,400&family='+b+':wght@400;600;700&display=swap';
+        document.head.appendChild(lnk);
+        document.documentElement.style.setProperty('--font-headline',"'"+cfg.fonts.headline+"', Georgia, serif");
+        document.documentElement.style.setProperty('--font-body',"'"+cfg.fonts.body+"', system-ui, sans-serif");
+      }
+      if (cfg.texts) Object.keys(cfg.texts).forEach(function(key){
+        var el=document.getElementById(key); if(!el) return;
+        var v=cfg.texts[key];
+        if(v.indexOf('<')!==-1) el.innerHTML=v; else el.textContent=v;
+      });
+      if (cfg.ctaUrl) document.querySelectorAll('[data-cta]').forEach(function(el){ el.href=cfg.ctaUrl; });
+    }
+
+    var CFG = window.FUNNEL_CONFIG || {};
+    if (CFG.supabaseUrl && CFG.supabaseAnonKey) {
+      try {
+        var sb=window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey);
+        sb.from('funnel_config').select('config').eq('funnel_id',CFG.funnelId).single()
+          .then(function(res){ applyConfig(res.data&&res.data.config?deepMerge(CFG,res.data.config):CFG); })
+          .catch(function(){ applyConfig(CFG); });
+      } catch(e){ applyConfig(CFG); }
+    } else {
+      applyConfig(CFG);
+    }
+  })();
+  </script>
+</body>
+</html>
