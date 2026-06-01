@@ -66,7 +66,7 @@
     .benefit-list li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--sidebar-border); font-size: 13px; line-height: 1.5; }
     .benefit-list li:last-child { border-bottom: none; }
     .benefit-icon { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.7); border: 1px solid var(--sidebar-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; }
-    .benefit-text { flex: 1; min-width: 0; }
+    .benefit-text { flex: 1; min-width: 0; color: #1a1a1a; font-size: 13px; line-height: 1.5; }
 
     /* Stock badge */
     .stock-badge { background: #fff3f3; border: 1.5px solid var(--stock-text); border-radius: 6px; padding: 8px 12px; text-align: center; font-size: 12px; font-weight: 700; color: var(--stock-text); margin-bottom: 12px; line-height: 1.4; }
@@ -466,6 +466,7 @@
       if (cfg.texts) Object.keys(cfg.texts).forEach(function(key){
         var el=document.getElementById(key); if(!el) return;
         var v=cfg.texts[key];
+        if (!v || v.trim()==='') return;
         if(v.indexOf('<')!==-1) el.innerHTML=v; else el.textContent=v;
       });
       if (cfg.ctaUrl) document.querySelectorAll('[data-cta]').forEach(function(el){ el.href=cfg.ctaUrl; });
