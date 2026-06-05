@@ -70,7 +70,7 @@ window.FUNNEL_CONFIG = {
     siteTagline: 'Solutions sportives pour enfants',
 
     /* ── Hero ── */
-    h1: '« Mon fils de 11 ans est passé de boiter sur le terrain de football à marquer le but de la victoire — voici la découverte à 29€ qui a tout changé »',
+    h1: '« Mon fils de 11 ans est passé de boiter sur le terrain de football à marquer le but de la victoire — voici la découverte à moins de 25€ qui a tout changé »',
     h1Sub: 'Comment un père de la région lyonnaise a enfin trouvé une vraie solution contre les douleurs au talon de son fils (après avoir dépensé 445€ en traitements inefficaces)',
     byline: 'Par Thomas Dupont, Papa de footballeur',
     bylineDate: 'Mardi 4 mars 2025',
@@ -121,7 +121,7 @@ window.FUNNEL_CONFIG = {
     s2Li2: 'Les solutions génériques pour adultes ne fonctionnent pas pour les jeunes sportifs en pleine croissance',
     s2Li3: 'Le cycle douleur-repos-douleur vole des saisons entières aux enfants',
     s2Li4: 'Les jeunes athlètes doivent pouvoir continuer à bouger en sécurité pendant leur guérison',
-    s2P3: 'À 29€, ça coûtait moins cher qu\'une seule séance de kiné. Je me suis dit : pourquoi ne pas essayer, à ce stade ?',
+    s2P3: 'À moins de 25€, ça coûtait moins cher qu\'une seule séance de kiné. Je me suis dit : pourquoi ne pas essayer, à ce stade ?',
     s2P4: '<strong>J\'ai commandé le même soir.</strong>',
 
     /* ── Section 3 — Calendrier de récupération ── */
@@ -150,7 +150,7 @@ window.FUNNEL_CONFIG = {
     s5P1: 'Les talonnettes de pharmacie ne sont fondamentalement que des coussins qui glissent. Ça peut soulager un peu, mais <strong>ça ne règle rien.</strong>',
     s5P2: 'Les semelles orthopédiques sur-mesure pourraient fonctionner si votre enfant ne grandissait pas et ne devenait pas plus actif. En réalité, <strong>elles sont coûteuses et dépassées avant même d\'arriver.</strong>',
     s5P3: 'Le "repos et attente" ignore le fait que les mêmes forces qui causent la blessure sont toujours là quand votre enfant reprend le sport.',
-    s5P4: 'J\'ai dépensé 445€ en traitements conçus pour gérer des symptômes. <strong>SeverX a traité la cause réelle du problème, pour 29€.</strong>',
+    s5P4: 'J\'ai dépensé 445€ en traitements conçus pour gérer des symptômes. <strong>SeverX a traité la cause réelle du problème, pour moins de 25€.</strong>',
 
     /* ── Section 6 — Témoignages ── */
     s6Title: 'Ce que disent les autres parents',
@@ -174,7 +174,7 @@ window.FUNNEL_CONFIG = {
     /* ── Section 8 — Comparaison ── */
     s8Title: 'Pourquoi SeverX est plus efficace que tout le reste',
     s8Li1: '<strong>Vs les talonnettes :</strong> Elles ne font que rembourrer. SeverX corrige réellement le problème biomécanique.',
-    s8Li2: '<strong>Vs les semelles sur-mesure :</strong> Même après remboursement, elles restent chères, longues à obtenir, et les enfants les dépassent. SeverX coûte 29€ et s\'adapte à la croissance.',
+    s8Li2: '<strong>Vs les semelles sur-mesure :</strong> Même après remboursement, elles restent chères, longues à obtenir, et les enfants les dépassent. SeverX coûte moins de 25€ et s\'adapte à la croissance.',
     s8Li3: '<strong>Vs la kinésithérapie :</strong> Des séances coûteuses centrées sur des étirements. SeverX apporte du soutien pendant l\'activité réelle.',
     s8Li4: '<strong>Vs le repos :</strong> Garantit des saisons perdues. SeverX permet aux enfants de guérir tout en restant actifs.',
 
@@ -194,7 +194,7 @@ window.FUNNEL_CONFIG = {
     s11P1: 'Je sais que vous êtes probablement sceptique. Vous avez sans doute déjà dépensé de l\'argent dans des traitements qui n\'ont pas fonctionné. Vous avez vécu les déceptions et regardé la confiance de votre jeune sportif prendre coup après coup.',
     s11P2: 'Mais et si cette fois, c\'était différent ?',
     s11P3: 'Et si dans un mois, votre enfant jouait sans peur ? Demandait à s\'entraîner plus longtemps au lieu de trouver des excuses ? Attendait les matchs avec impatience au lieu de les redouter ?',
-    s11P4: 'Pour <strong>29€</strong> — moins cher qu\'une seule séance de kiné — vous pourriez rendre confiance à votre jeune athlète. Et avec la garantie 30 jours, <strong>le seul risque, c\'est de découvrir que la douleur de votre enfant était traitable depuis le début.</strong>',
+    s11P4: 'Pour <strong>moins de 25€</strong> — moins cher qu\'une seule séance de kiné — vous pourriez rendre confiance à votre jeune athlète. Et avec la garantie 30 jours, <strong>le seul risque, c\'est de découvrir que la douleur de votre enfant était traitable depuis le début.</strong>',
     s11P5: '<strong>N\'attendez pas qu\'il "grandisse" tout seul.</strong> Chaque jour où votre enfant joue avec la douleur peut rendre la guérison plus difficile — et la confiance encore plus basse.',
     s11P6: 'Lucas a perdu plus d\'un an à cause de douleurs au talon qui s\'avéraient parfaitement traitables. <strong>Vous pouvez faire un choix différent aujourd\'hui.</strong>',
 
